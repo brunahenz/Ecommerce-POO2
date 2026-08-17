@@ -4,7 +4,7 @@ from ecommerce.categoria import Categoria
 class Produto:
 
     def __init__(
-        self, nome: str, preco: float, quantidade_estoque: int, categoria: Categoria
+        self, nome: str, preco: float, quantidade_estoque: int, categoria: Categoria,
     ) -> None:
         self.nome = nome
         self.preco = preco
