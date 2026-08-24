@@ -1,4 +1,5 @@
 from datetime import date
+from ecommerce.cupom import Cupom
 
 
 class Pagamento:
@@ -10,6 +11,7 @@ class Pagamento:
         self._valor = valor
         self._data = date.today()
         self._confirmado = False
+        self._cupom: Cupom | None = None
 
     @property
     def pedido(self) -> "Pedido":
@@ -26,6 +28,7 @@ class Pagamento:
     @property
     def confirmado(self) -> bool:
         return self._confirmado
+        
 
     def confirmar(self) -> None:
         if self._confirmado:

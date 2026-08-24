@@ -2,6 +2,7 @@ import pytest
 from ecommerce.categoria import Categoria
 from ecommerce.pedido import Pedido
 from ecommerce.produto import Produto
+from ecommerce.estrategia_desconto import SemDesconto, DescontoPercentual
 
 
 class TestPedido:
@@ -70,3 +71,20 @@ class TestPedido:
         pedido.adicionar_item(self.notebook, 1)
         with pytest.raises(ValueError):
             pedido.enviar()
+
+    def test_calcular_total_sem_estrategia(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     assert pedido.calcular_total() == 3500.0
+
+    def test_calcular_total_com_estrategia_sem_desconto(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     assert pedido.calcular_total(SemDesconto()) == 3500.0
+
+    def test_calcular_total_com_desconto_percentual(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     assert pedido.calcular_total(DescontoPercentual(15)) == 3500.0 * 0.85
+
+     
