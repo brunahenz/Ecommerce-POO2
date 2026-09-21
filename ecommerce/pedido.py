@@ -4,7 +4,11 @@ from ecommerce.pagamento import Pagamento
 from ecommerce.estrategia_desconto import EstrategiaDesconto
 from ecommerce.cupom import Cupom
 from ecommerce.estrategia_frete import EstrategiaFrete
-
+from ecommerce.criador_pagamento import CriadorPagamento
+from ecommerce.forma_pagamento import FormaPagamento
+from ecommerce.pagamento import PagamentoPix
+from ecommerce.produto import Produto
+from ecommerce.entrega import Entrega
 
 class Pedido:
     def __init__(self) -> None:
@@ -12,6 +16,8 @@ class Pedido:
         self._status = StatusPedido.CRIADO
         self._pagamento: Pagamento | None = None
         self._cupom: Cupom | None = None
+        self._criador_pagamento = CriadorPagamento()
+        self._entrega: Entrega | None = None
 
     @property
     def itens(self) -> list[ItemPedido]:
@@ -28,6 +34,11 @@ class Pedido:
     @property
     def cupom(self) -> Cupom | None:
         return self._cupom
+
+    def registrar_entrega(self, entrega: Entrega) -> None:
+        if self._status != StatusPedido.PAGO:
+            raise ValueError("So e possivel registrar entrega de um pedido pago")
+        self._entrega = entrega
 
     def calcular_valor_final(
         self,
@@ -71,9 +82,15 @@ class Pedido:
         self._transicionar(StatusPedido.PAGO)
         self._pagamento = Pagamento(self, self.calcular_total())
 
-    def confirmar_pagamento(self) -> None:
+    def confirmar_pagamento(
+        self, 
+        criador_pagamento: CriadorPagamento,
+        forma: FormaPagamento = FormaPagamento.PIX, **dados
+    ) -> None:
         self._transicionar(StatusPedido.PAGO)
-        self._pagamento = Pagamento(self, self.calcular_total())
+        self._pagamento = self._criador_pagamento.criar(
+            forma, self, self.calcular_total(), **dados
+        )
         self._pagamento.confirmar()
 
     def enviar(self) -> None:
