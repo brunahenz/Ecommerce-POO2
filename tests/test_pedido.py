@@ -3,6 +3,7 @@ from ecommerce.categoria import Categoria
 from ecommerce.pedido import Pedido
 from ecommerce.produto import Produto
 from ecommerce.estrategia_desconto import SemDesconto, DescontoPercentual
+from ecommerce.estrategia_frete import FreteFixo, FreteGratisAcimaDe
 
 
 class TestPedido:
@@ -86,5 +87,30 @@ class TestPedido:
      pedido = Pedido()
      pedido.adicionar_item(self.notebook, 1)
      assert pedido.calcular_total(DescontoPercentual(15)) == 3500.0 * 0.85
+
+    def test_calcular_valor_final_sem_frete(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     assert pedido.calcular_valor_final() == 3500.0
+
+    def test_calcular_valor_final_com_frete_fixo(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     assert pedido.calcular_valor_final(estrategia_frete=FreteFixo(25.0)) == 3525.0
+
+    def test_calcular_valor_final_com_desconto_e_frete(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     valor_final = pedido.calcular_valor_final(
+        estrategia_desconto=DescontoPercentual(10),
+        estrategia_frete=FreteFixo(25.0),
+     )
+     assert valor_final == (3500.0 * 0.90) + 25.0
+
+    def test_calcular_valor_final_frete_gratis_acima_do_minimo(self) -> None:
+     pedido = Pedido()
+     pedido.adicionar_item(self.notebook, 1)
+     estrategia_frete = FreteGratisAcimaDe(valor_minimo=1000.0, valor_frete=40.0)
+     assert pedido.calcular_valor_final(estrategia_frete=estrategia_frete) == 3500.0
 
      

@@ -3,6 +3,7 @@ from ecommerce.status_pedido import StatusPedido
 from ecommerce.pagamento import Pagamento
 from ecommerce.estrategia_desconto import EstrategiaDesconto
 from ecommerce.cupom import Cupom
+from ecommerce.estrategia_frete import EstrategiaFrete
 
 
 class Pedido:
@@ -28,6 +29,15 @@ class Pedido:
     def cupom(self) -> Cupom | None:
         return self._cupom
 
+    def calcular_valor_final(
+        self,
+        estrategia_desconto: EstrategiaDesconto | None = None,
+        estrategia_frete: EstrategiaFrete | None = None,
+    ) -> float:
+        total = self.calcular_total(estrategia_desconto)
+        if estrategia_frete is None:
+            return total
+        return total + estrategia_frete.calcular(total)
 
     def adicionar_item(self, produto: "Produto", quantidade: int) -> None:
         if self._status != StatusPedido.CRIADO:
