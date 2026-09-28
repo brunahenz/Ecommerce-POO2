@@ -9,11 +9,14 @@ from ecommerce.pagamento import (
     PagamentoCartao,
     PagamentoPix,
 )
+from ecommerce.categoria import Categoria
 
 
 class TestCriadorPagamento:
 
     def setup_method(self) -> None:
+        categoria = Categoria("Informática")
+        self.notebook = Produto("Notebook", 3500.0, 10, categoria)
         self.pedido = Pedido()
         self.pedido.adicionar_item(self.notebook, 1)
         self.criador = CriadorPagamento()

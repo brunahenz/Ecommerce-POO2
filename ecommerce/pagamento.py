@@ -14,6 +14,10 @@ class Pagamento(ABC):
         self._situacao = SituacaoPagamento.PENDENTE
 
     @property
+    def valor(self) -> float:
+        return self._valor
+
+    @property
     def situacao(self) -> SituacaoPagamento:
         return self._situacao
 
@@ -31,7 +35,7 @@ class Pagamento(ABC):
 
 
 class PagamentoPix(Pagamento):
-    def __init__(self, pedido: "Pedido", valor: float, chave: str) -> None:
+    def __init__(self, pedido, valor: float, chave: str = "") -> None:
         super().__init__(pedido, valor)
         self._chave = chave
 
@@ -59,6 +63,10 @@ class PagamentoCartao(Pagamento):
             raise ValueError("Numero de parcelas deve ser no minimo 1")
         self._bandeira = bandeira
         self._parcelas = parcelas
+
+    @property
+    def parcelas(self) -> int:
+        return self._parcelas
 
     def valor_parcela(self) -> float:
         return self._valor / self._parcelas

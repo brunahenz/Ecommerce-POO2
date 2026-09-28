@@ -19,6 +19,11 @@ class Pedido:
         self._criador_pagamento = CriadorPagamento()
         self._entrega: Entrega | None = None
 
+
+    @property
+    def entrega(self) -> Entrega | None:
+        return self._entrega
+
     @property
     def itens(self) -> list[ItemPedido]:
         return list(self._itens)
@@ -80,16 +85,27 @@ class Pedido:
 
     def pagar(self) -> None:
         self._transicionar(StatusPedido.PAGO)
-        self._pagamento = Pagamento(self, self.calcular_total())
+        self._pagamento = self._criador_pagamento.criar(
+        FormaPagamento.PIX,
+        self,
+        self.calcular_total(),
+        chave="chave-pix"
+    )
+        self._pagamento.confirmar()
+
 
     def confirmar_pagamento(
-        self, 
-        criador_pagamento: CriadorPagamento,
-        forma: FormaPagamento = FormaPagamento.PIX, **dados
-    ) -> None:
+      self,
+     criador_pagamento: CriadorPagamento | None = None,
+     forma: FormaPagamento = FormaPagamento.PIX,
+    **dados
+) -> None:
         self._transicionar(StatusPedido.PAGO)
-        self._pagamento = self._criador_pagamento.criar(
-            forma, self, self.calcular_total(), **dados
+
+        criador = criador_pagamento or self._criador_pagamento
+
+        self._pagamento = criador.criar(
+         forma, self, self.calcular_total(), **dados
         )
         self._pagamento.confirmar()
 

@@ -2,9 +2,15 @@ import pytest
 from ecommerce.pedido import Pedido
 from ecommerce.entrega import EntregaCorreios
 from ecommerce.expedidor import ExpedidorLojaCentral
+from ecommerce.produto import Produto
+from ecommerce.categoria import Categoria
 
 
 class TestExpedidor:
+
+    def setup_method(self) -> None:
+        categoria = Categoria("Informática")
+        self.notebook = Produto("Notebook", 3500.0, 10, categoria)
 
     def _pedido_pago(self) -> Pedido:
         pedido = Pedido()

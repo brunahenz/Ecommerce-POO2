@@ -7,6 +7,10 @@ class Entrega(ABC):
         self._codigo_rastreio = codigo_rastreio
 
     @property
+    def modalidade(self) -> str:
+        return self._modalidade
+
+    @property
     def codigo_rastreio(self) -> str:
         return self._codigo_rastreio
 

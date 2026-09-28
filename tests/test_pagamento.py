@@ -23,18 +23,18 @@ class TestPagamento:
         self.pedido.adicionar_item(self.notebook, 1)
 
     def test_criar_pagamento(self) -> None:
-        pag = Pagamento(self.pedido, 3500.0)
+        pag = PagamentoPix(self.pedido, 3500.0)
         assert pag.valor == 3500.0
         assert pag.confirmado is False
 
     def test_confirmar_pagamento(self) -> None:
-        pag = Pagamento(self.pedido, 3500.0)
+        pag = PagamentoPix(self.pedido, 3500.0)
         pag.confirmar()
         assert pag.confirmado is True
 
     def test_valor_invalido_zero(self) -> None:
         with pytest.raises(ValueError):
-            Pagamento(self.pedido, 0)
+            PagamentoPix(self.pedido, 0)
 
     def test_pagamento_e_abstrato(self) -> None:
         with pytest.raises(TypeError):
