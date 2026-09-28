@@ -24,3 +24,5 @@ class ServicoNotificacaoPedido:
     def _notificar(self, cliente: "Cliente", mensagem: str) -> None:
         notificacao = self._criador_notificacao.criar(cliente.canal_preferido)
         notificacao.enviar(cliente.contato, mensagem)
+
+    

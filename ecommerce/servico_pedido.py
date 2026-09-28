@@ -1,3 +1,11 @@
+from ecommerce.criador_pagamento import CriadorPagamento
+from ecommerce.expedidor import Expedidor
+from ecommerce.servico_notificacao_pedido import ServicoNotificacaoPedido
+from ecommerce.forma_pagamento import FormaPagamento
+from ecommerce.entrega import Entrega
+
+
+
 class ServicoPedido:
 
     def __init__(
